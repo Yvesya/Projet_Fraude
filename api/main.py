@@ -6,8 +6,7 @@ import logging
 import time
 import pickle
 
-# --- Configuration du Logging (MLOps) ---
-# Enregistre les logs dans un fichier "api_predictions.log"
+#  Configuration du Logging (MLOps) 
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
@@ -18,16 +17,14 @@ logging.basicConfig(
 )
 logger = logging.getLogger('FraudDetectorAPI')
 
-# --- Définition des Chemins ---
-MODEL_PATH = 'model_artefacts/xgb_fraud_detector.joblib'
-FEATURES_PATH = 'model_artefacts/features.pkl'
-
-# --- Chargement des Artéfacts ---
+#  Définition des Chemins 
+MODEL_PATH = 'model_artefacts/xgb_fraud_detector.joblib' # le modele charger a ete entraine dans colab et sauvegarde avec joblib
+FEATURES_PATH = 'model_artefacts/features.pkl'   #liens vers le ficher colab( https://colab.research.google.com/drive/1mcGX9wPXm6ed9dGJTbrnpsard2ShkOBe?usp=sharing ) 
 try:
-    # 1. Charger le Modèle Pipeline
+    # 1. Chargement du Modèle Pipeline
     model = joblib.load(MODEL_PATH)
     
-    # 2. Charger la liste des features
+    # 2. Chargement de la liste des features
     with open(FEATURES_PATH, 'rb') as f:
         FEATURE_COLUMNS = pickle.load(f)
     
@@ -39,34 +36,45 @@ except Exception as e:
     model = None
     FEATURE_COLUMNS = []
 
-
-# =================================================================
-# ⚠️ ACTION REQUISE : ADAPTER LE MODÈLE PYDANTIC CI-DESSOUS
-# =================================================================
-
-# La classe Pydantic doit contenir TOUS les éléments de FEATURE_COLUMNS
-# avec le bon type (int, float). Elle servira de contrat d'entrée.
-# Modifiez cette classe en fonction de la sortie du logger ci-dessus !
+#  Définition du Modèle de Données pour l'API 
 class TransactionInput(BaseModel):
-    # Exemple basé sur un dataset de fraude générique. 
-    # REMPLACEZ TOUS LES CHAMPS CI-DESSOUS par les noms exacts et l'ordre de votre liste FEATURE_COLUMNS
+    Time: int
+    V1: float
+    V2: float
+    V3: float
+    V4: float
+    V5: float
+    V6: float
+    V7: float
+    V8: float
+    V9: float
+    V10: float
+    V11: float
+    V12: float
+    V13: float
+    V14: float
+    V15: float
+    V16: float
+    V17: float
+    V18: float
+    V19: float
+    V20: float
+    V21: float
+    V22: float
+    V23: float
+    V24: float
+    V25: float
+    V26: float
+    V27: float
+    V28: float
+    Amount: float
     
-    # 1. Champs numériques originaux
-    step: int
-    amount: float
-    oldbalanceOrg: float
-    newbalanceOrg: float
-    oldbalanceDest: float
-    newbalanceDest: float
-    
-    # 2. Champs 'One-Hot Encoded' (si vous avez encodé le 'type' de transaction)
-    # Exemple :
+    # 2. Champs 'One-Hot Encoded' pour 'Type' de transaction
     type_CASH_OUT: int = 0
     type_TRANSFER: int = 0
-    # Ajoutez toutes les colonnes issues de votre encodage ici...
 
 
-app = FastAPI(title="Fraud Detection API")
+app = FastAPI(title="Detection de Fraude API")
 
 @app.get("/", tags=["Health"])
 def home():
@@ -85,10 +93,8 @@ def predict_fraud(transaction: TransactionInput):
     # 1. Préparation des données pour le modèle
     input_data = transaction.model_dump()
     
-    # Créer un DataFrame avec les colonnes dans l'ordre EXACT attendu
     df_input = pd.DataFrame([input_data])
     
-    # S'assurer que les colonnes du DF sont dans l'ordre de FEATURE_COLUMNS
     try:
         df_input = df_input[FEATURE_COLUMNS]
     except KeyError as e:
@@ -107,7 +113,7 @@ def predict_fraud(transaction: TransactionInput):
         f"PREDICTION | Pred: {bool(prediction)} | Prob: {probability:.4f} | Time: {response_time:.4f}s | Data: {input_data}"
     )
 
-    # 4. Retourner le résultat
+    # 4. Retourne le résultat
     return {
         "is_fraud": bool(prediction),
         "fraud_probability": float(probability),
