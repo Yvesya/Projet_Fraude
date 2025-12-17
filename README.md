@@ -1,9 +1,11 @@
 #Détection de Fraudes Bancaires (Pipeline MLOps)
 
 **Contexte**
+
 Les fraudes bancaires coûtent des milliards chaque année. L’objectif de ce projet est de détecter automatiquement les transactions frauduleuses dans un dataset réel de transactions bancaires synthétiques, tout en proposant une solution industrialisée via un pipeline MLOps.
 
 📊**Dataset**
+
  Le dataset utilisé provient de Kaggle : https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud
  Format CSV, 284807 transactions
  30 features (V1-V28, Time, Amount)
@@ -12,6 +14,7 @@ Les fraudes bancaires coûtent des milliards chaque année. L’objectif de ce p
  1 → Transaction frauduleuse (~0.17% des transactions)
 
 🎯**Objectifs**
+
  1-Analyser les transactions et détecter les patterns suspects
  2-Construire un modèle de classification robuste (Random Forest, XGBoost)
  3-Gérer le déséquilibre extrême des classes (SMOTE)
@@ -19,17 +22,21 @@ Les fraudes bancaires coûtent des milliards chaque année. L’objectif de ce p
  5-Intégrer un système de logs pour le suivi des prédictions
 
   🛠️**Méthodologie**
+  
   1.Analyse exploratoire (EDA)
-   Visualisation de la distribution des classes
-   Étude des correlations et des patterns des features
+  
+    Visualisation de la distribution des classes
+    Étude des correlations et des patterns des features
 
   2. Prétraitement
-   Séparation des features (X) et de la cible (y)
-   Split train/test stratifié (70% / 30%)
-   Gestion des variables catégorielles avec pd.get_dummies()
-   Rééchantillonnage de la classe minoritaire via SMOTE
+          
+    Séparation des features (X) et de la cible (y)
+    Split train/test stratifié (70% / 30%)
+    Gestion des variables catégorielles avec pd.get_dummies()
+    Rééchantillonnage de la classe minoritaire via SMOTE
 
-  3. Modélisation
+  4. Modélisation
+
     *Random Forest*
     Pipeline avec StandardScaler et RandomForestClassifier
     Poids équilibrés pour la classe minoritaire
@@ -37,7 +44,8 @@ Les fraudes bancaires coûtent des milliards chaque année. L’objectif de ce p
     Pipeline avec StandardScaler et XGBClassifier
     Hyperparamètres : n_estimators=100, eval_metric='logloss'
 
-  4. Évaluation
+  6. Évaluation
+     
     Métriques principales :
     Recall sur la classe fraude (minimiser les fausses négatives)
     AUC-ROC pour la performance globale
@@ -50,22 +58,24 @@ Comparaison des modèles :
 
 
 🚀**Déploiement et MLOps**
+
 Architecture
- 1-Le modèle XGBoost entraîné est sérialisé en xgb_fraud_detector.joblib
- 2-La liste des features est sauvegardée dans features.pkl
- 3-Une API FastAPI est créée (api/main.py)
-   .Schéma d’entrée validé avec Pydantic
-   .Prédiction en temps réel sur les 30 features
- 4-Logging MLOps :
-   .Chaque requête, la prédiction et le temps de réponse sont enregistrés dans api_predictions.log
-   .Préparation pour le suivi de la dérive des données (concept drift)
+
+    1-Le modèle XGBoost entraîné est sérialisé en xgb_fraud_detector.joblib
+    2-La liste des features est sauvegardée dans features.pkl
+    3-Une API FastAPI est créée (api/main.py)
+     .Schéma d’entrée validé avec Pydantic
+     .Prédiction en temps réel sur les 30 features
+    4-Logging MLOps :
+    .Chaque requête, la prédiction et le temps de réponse sont enregistrés dans api_predictions.log
+    .Préparation pour le suivi de la dérive des données (concept drift)
    
 Lancer l’API
 Prérequis : Docker Desktop installé et lancé
 # Construire l'image Docker
 docker build -t fraude-api .
 
-# Lancer le conteneur
+# Lancement du conteneur
 docker run -d --name Detection_Fraude -p 8000:8000 fraude-api
 
 # Tester l'API via Swagger
@@ -87,6 +97,7 @@ Projet_Fraude/
 
 
 ✅**Conclusion**
-XGBoost est le modèle retenu pour sa performance sur les fraudes (Recall et AUC-ROC élevés)
-Le projet est industrialisation-ready grâce à Docker et FastAPI
-Les logs assurent une traçabilité des prédictions, base pour un futur suivi de dérive
+
+    XGBoost est le modèle retenu pour sa performance sur les fraudes (Recall et AUC-ROC élevés)
+    Le projet est industrialisation-ready grâce à Docker et FastAPI
+    Les logs assurent une traçabilité des prédictions, base pour un futur suivi de dérive
