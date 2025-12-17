@@ -69,10 +69,7 @@ class TransactionInput(BaseModel):
     V28: float
     Amount: float
     
-    # 2. Champs 'One-Hot Encoded' pour 'Type' de transaction
-    type_CASH_OUT: int = 0
-    type_TRANSFER: int = 0
-
+#  Creation de l'Application FastAPI
 
 app = FastAPI(title="Detection de Fraude API")
 
@@ -92,7 +89,6 @@ def predict_fraud(transaction: TransactionInput):
     
     # 1. Préparation des données pour le modèle
     input_data = transaction.model_dump()
-    
     df_input = pd.DataFrame([input_data])
     
     try:
