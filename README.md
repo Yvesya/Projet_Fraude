@@ -2,24 +2,24 @@
 
 **Contexte**
 
-Les fraudes bancaires coûtent des milliards chaque année. L’objectif de ce projet est de détecter automatiquement les transactions frauduleuses dans un dataset réel de transactions bancaires synthétiques, tout en proposant une solution industrialisée via un pipeline MLOps.
+    Les fraudes bancaires coûtent des milliards chaque année. L’objectif de ce projet est de détecter automatiquement les transactions frauduleuses dans un dataset réel de transactions bancaires synthétiques, tout en proposant une solution industrialisée via un pipeline MLOps.
 
 📊**Dataset**
 
- Le dataset utilisé provient de Kaggle : https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud
- Format CSV, 284807 transactions
- 30 features (V1-V28, Time, Amount)
- Classe cible Class :
- 0 → Transaction normale
- 1 → Transaction frauduleuse (~0.17% des transactions)
+    Le dataset utilisé provient de Kaggle : https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud
+    Format CSV, 284807 transactions
+    30 features (V1-V28, Time, Amount)
+    Classe cible Class :
+    0 → Transaction normale
+    1 → Transaction frauduleuse (~0.17% des transactions)
 
 🎯**Objectifs**
 
- 1-Analyser les transactions et détecter les patterns suspects
- 2-Construire un modèle de classification robuste (Random Forest, XGBoost)
- 3-Gérer le déséquilibre extrême des classes (SMOTE)
- 4-Déployer une API pour prédire les fraudes en temps réel
- 5-Intégrer un système de logs pour le suivi des prédictions
+    1-Analyser les transactions et détecter les patterns suspects
+    2-Construire un modèle de classification robuste (Random Forest, XGBoost)
+    3-Gérer le déséquilibre extrême des classes (SMOTE)
+    4-Déployer une API pour prédire les fraudes en temps réel
+    5-Intégrer un système de logs pour le suivi des prédictions
 
   🛠️**Méthodologie**
   
@@ -50,11 +50,11 @@ Les fraudes bancaires coûtent des milliards chaque année. L’objectif de ce p
     Recall sur la classe fraude (minimiser les fausses négatives)
     AUC-ROC pour la performance globale
 
-Comparaison des modèles :
-| Modèle                | Recall (Fraude) | AUC-ROC Score |
-| --------------------- | --------------- | ------------- |
-| Random Forest         | 0.7905          | 0.9494        |
-| XGBoost (sélectionné) | **0.7973**      | **0.9779**    |
+    Comparaison des modèles :
+    | Modèle                | Recall (Fraude) | AUC-ROC Score |
+    | --------------------- | --------------- | ------------- |
+    | Random Forest         | 0.7905          | 0.9494        |
+    | XGBoost (sélectionné) | **0.7973**      | **0.9779**    |
 
 
 🚀**Déploiement et MLOps**
@@ -70,30 +70,28 @@ Architecture
     .Chaque requête, la prédiction et le temps de réponse sont enregistrés dans api_predictions.log
     .Préparation pour le suivi de la dérive des données (concept drift)
    
-Lancer l’API
-Prérequis : Docker Desktop installé et lancé
-# Construire l'image Docker
-docker build -t fraude-api .
-
-# Lancement du conteneur
-docker run -d --name Detection_Fraude -p 8000:8000 fraude-api
-
-# Tester l'API via Swagger
-http://localhost:8000/docs
+    Lancer l’API
+    Prérequis : Docker Desktop installé et lancé
+    # Construire l'image Docker
+    docker build -t fraude-api .
+    # Lancement du conteneur
+    docker run -d --name Detection_Fraude -p 8000:8000 fraude-api
+    # Tester l'API via Swagger
+    http://localhost:8000/docs
 
 
 📂Structure du projet
 
-Projet_Fraude/
-├── api/
-│   └── main.py                 # Code FastAPI + Logging
-├── model_artefacts/
-│   ├── xgb_fraud_detector.joblib
-│   └── features.pkl
-├── notebooks/
-│   └── Detection_de_Fraude.ipynb      # Notebook complet (EDA, Modélisation)
-├── Dockerfile
-└── requirements.txt
+    Projet_Fraude/
+    ├── api/
+    │   └── main.py                 # Code FastAPI + Logging
+    ├── model_artefacts/
+    │   ├── xgb_fraud_detector.joblib
+    │   └── features.pkl
+    ├── notebooks/
+    │   └── Detection_de_Fraude.ipynb      # Notebook complet (EDA, Modélisation)
+    ├── Dockerfile
+    └── requirements.txt
 
 
 ✅**Conclusion**
